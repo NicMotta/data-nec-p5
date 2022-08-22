@@ -8,6 +8,7 @@ let geolocation = [{
   lat: 0,
   lng: 0,
 }]
+let latitude, longitude, datosGeolocation
 
 let sensors = [{
   gx: 0,
@@ -17,52 +18,54 @@ let sensors = [{
   ay: 0,
   az: 0
 }]
+let gx, gy, gz, ax, ay, az, datosSensor
 
 let contadorGeolocation = 0
 let contadorSensor = 0
-let buttonrec, buttonstop, buttondownload, buttonvideo
 let mic, recorder, soundFile
 let video;
+
+let estado;
 
 let timer = {
   minutes: 0,
   seconds: 0
 }
+let minutes, seconds
 
-let estadoRegistro = true
+let estadoRegistro = false
+let estadoMensaje = 'No iniciado'
 
 function setup() {
   noCanvas()
-  // createCanvas(window.innerWidth, window.innerHeight)
 
   watchPosition(positionChanged)
 
-  buttonrec = createButton('rec')
-  buttonrec.position(100, 100)
-  buttonrec.mousePressed(setRecord)
+  video = createCapture(VIDEO)
+  video.size(1, 1)
 
-  buttonstop = createButton('stop')
-  buttonstop.position(100, 150)
-  buttonstop.mousePressed(setStop)
+  mic = new p5.AudioIn()
+  mic.start()
+  recorder = new p5.SoundRecorder()
+  recorder.setInput(mic)
+  soundFile = new p5.SoundFile()
 
-  buttonstop = createButton('download')
-  buttonstop.position(100, 200)
-  buttonstop.mousePressed(setDownload)
-
-  video = createCapture(VIDEO); //access live webcam
-  video.size(320, 240); //change the size to 320 x 240
-  buttonvideo = createButton('snap'); //create a button called "snap"
-  buttonvideo.position(100, 250)
-  buttonvideo.mousePressed(takesnap); //when the button is pressed, call the function called "takesnap"
-
-  mic = new p5.AudioIn();
-  mic.start();
-  recorder = new p5.SoundRecorder();
-  recorder.setInput(mic);
-  soundFile = new p5.SoundFile();
-
-  setInterval(setSensores, 200);
+  setInterval(setSensores, 200)
   setInterval(setTime, 1000)
+
+  estado = select('#status')
+  minutes = select('#minutes')
+  seconds = select('#seconds')
+  latitude = select('#lat')
+  longitude = select('#lng')
+  datosGeolocation = select('#datogeo')
+  gx = select('#gx')
+  gy = select('#gy')
+  gz = select('#gz')
+  ax = select('#ax')
+  ay = select('#ay')
+  az = select('#az')
+  datosSensor = select('#datosensor')
 }
 
 function windowResized() {
@@ -70,16 +73,21 @@ function windowResized() {
 }
 
 function draw() {
-  background(210)
-  fill(255,0,0)
-  ellipseMode(CENTER)
-  ellipse(width/2, height/2, 50, 50)
-  textSize(32)
-  
+  image(video, 0, 0);
 
-  image(video, 0, 300);
-
-
+  estado.html(estadoMensaje)
+  seconds.html(timer.seconds)
+  minutes.html(timer.minutes)
+  latitude.html(geolocation[contadorGeolocation].lat)
+  longitude.html(geolocation[contadorGeolocation].lng)
+  datosGeolocation.html(contadorGeolocation)
+  gx.html(sensors[contadorSensor].gx)
+  gy.html(sensors[contadorSensor].gy)
+  gz.html(sensors[contadorSensor].gz)
+  ax.html(sensors[contadorSensor].ax)
+  ay.html(sensors[contadorSensor].ay)
+  az.html(sensors[contadorSensor].az)
+  datosSensor.html(contadorSensor)
 }
 
 function positionChanged(position){
@@ -107,14 +115,6 @@ function setStop() {
   //saveSound(soundFile, 'mySound.wav')
 }
 
-function takesnap() {
-  image(video, 0, 300); //draw the image being captured on webcam onto the canvas at the position (0, 0) of the canvas
-}
-
-function holaMundo() {
-  console.log('hola mundo')
-}
-
 function setSensores() {
   if (estadoRegistro){
     contadorSensor++
@@ -130,19 +130,6 @@ function setSensores() {
   // setear html
 }
 
-function setStart() {
-  estadoRegistro = true
-}
-
-function setStop() {
-  estadoRegistro = false
-}
-
-function setDownload() {
-  getAudioContext().resume()
-  saveSound(soundFile, 'mySound.wav')
-}
-
 function setTime() {
   if (estadoRegistro) {
     timer.seconds++
@@ -151,5 +138,29 @@ function setTime() {
       timer.minutes++
     }
   }
-  // setear el html con los valores
 }
+
+function setStart() {
+  estadoRegistro = true
+  estadoMensaje = 'Iniciado'
+}
+
+function setStop() {
+  estadoRegistro = false
+  estadoMensaje = 'Detenido'
+}
+
+function setDownload() {
+  estadoMensaje = 'Descargado'
+  getAudioContext().resume()
+  saveSound(soundFile, 'mySound.wav')
+}
+
+function setClear() {
+  estadoMensaje = 'Reset'
+  timer.minutes = 0
+  timer.seconds = 0
+  contadorGeolocation = 0
+  contadorSensor = 0
+}
+

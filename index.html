@@ -12,13 +12,17 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
     <script src="index.js"></script>
-
   </head>
+
   <body>
 
+  <div class="">
     <!-- HEADER -->
     <div class='shadow shadow-gray-200'>
-      <h1 class="text-gray-800 text-3xl p-1 m-4 font-bold text-center">APP BIKE</h1>
+      <a href="/">
+        <h1 class="text-gray-800 text-3xl p-1 m-4 font-bold text-center hover:bg-gray-200">[ data_nec ]</h1>
+      </a>
+      <h1 class="text-gray-800 text-2xl p-1 m-4 font-bold text-center">REGISTRO</h1>
       </div>
     <!-- HEADER -->
 
@@ -30,17 +34,17 @@
           <div>
             <h5 class="text-gray-500 font-bold">X</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="x" class="text-xl text-gray-800 font-bold mb-2">{sensorX}</p>
+            <p id="gx" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
           <div>
             <h5 class="text-gray-500 font-bold">Y</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="y" class="text-xl text-gray-800 font-bold mb-2">{sensorY}</p>
+            <p id="gy" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
           <div>
             <h5 class="text-gray-500 font-bold">Z</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="z" class="text-xl text-gray-800 font-bold mb-2">{sensorZ}</p>
+            <p id="gz" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
         </div>
       </div>
@@ -49,22 +53,22 @@
 
     <!-- ACELEROMETRO -->
       <div class="m-3 rounded-md shadow shadow-gray-200 my-5">
-        <h2 class="text-xl text-center font-bold text-gray-500 mb-2">ACELEROMETRO</h2>
+        <h2 class="text-xl text-center font-bold text-gray-500 mb-2">ACELERÓMETRO</h2>
         <div class="grid grid-cols-3 text-center">
           <div>
             <h5 class="text-gray-500 font-bold">X</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="x" class="text-xl text-gray-800 font-bold mb-2">{sensorX}</p>
+            <p id="ax" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
           <div>
             <h5 class="text-gray-500 font-bold">Y</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="y" class="text-xl text-gray-800 font-bold mb-2">{sensorY}</p>
+            <p id="ay" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
           <div>
             <h5 class="text-gray-500 font-bold">Z</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="z" class="text-xl text-gray-800 font-bold mb-2">{sensorZ}</p>
+            <p id="az" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
         </div>
       </div>
@@ -78,12 +82,12 @@
           <div>
             <h5 class="text-gray-500 font-bold">LATITUD</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="x" class="text-xl text-gray-800 font-bold mb-2">{lat}</p>
+            <p id="lat" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
           <div>
             <h5 class="text-gray-500 font-bold">LONGITUD</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p id="y" class="text-xl text-gray-800 font-bold mb-2">{lng}</p>
+            <p id="lng" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
         </div>
       </div>
@@ -95,21 +99,23 @@
         <h2 class="text-xl text-center font-bold text-gray-500 mb-2">INFORMACIÓN</h2>
         <div class="grid grid-cols-3 text-center">
           <div>
-            <h5 class="text-gray-500 font-bold">DATOS GY</h5>
+            <h5 class="text-gray-500 font-bold">DATOS SENSOR</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p class="text-xl text-gray-800 font-bold mb-2">{datosGy}</p>
+            <p id="datosensor" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
 
           <div>
             <h5 class="text-gray-500 font-bold">DATOS GEO</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p class="text-xl text-gray-800 font-bold mb-2">{datosGeo}</p>
+            <p id="datogeo" class="text-xl text-gray-800 font-bold mb-2">0</p>
           </div>
 
           <div>
             <h5 class="text-gray-500 font-bold">TIEMPO</h5>
             <div class='bg-gray-200 mt-1 h-0.5 w-3/4 m-auto'></div>
-            <p class="text-xl text-gray-800 font-bold mb-2">{}</p>
+            <p class="text-xl text-gray-800 font-bold mb-2">
+              <span id="minutes">00</span>:<span id="seconds">00</span>
+            </p>
           </div>
         </div>
       </div>
@@ -119,18 +125,18 @@
     <!-- FOOTER -->
       <footer class='fixed right-0 bottom-0 left-0'>
         <div class="text-center bg-gray-200 my-4 m-3">
-          <span class="font-bold">Estado: </span>
+          <p class="font-bold">Estado: <span class="font-normal" id="status">status</span></p>
         </div>
           <div class="grid grid-cols-4 place-items-center text-gray-200">
             
             <button
-            onclick=""
+            onclick="setStart()"
               class="btn-floating btn-large waves-effect waves-light grey darken-4 m-2 mb-4">
               <i class="material-icons">play_arrow</i>
             </button>
 
             <button
-            onclick=""
+            onclick="setStop()"
               class="btn-floating btn-large waves-effect waves-light grey darken-4 m-2 mb-4">
               <i class="material-icons">stop</i>
             </button>
@@ -142,14 +148,14 @@
             </button>
 
             <button
-            onclick=""
+            onclick="setClear()"
               class="btn-floating btn-large waves-effect waves-light grey darken-4 m-2 mb-4">
               <i class="material-icons">delete</i>
             </button>
         </div>
         </footer>
     <!-- FOOTER -->
-
-      <button id="buttonhtml" onclick="holaMundo()">boton index html</button>
+  </div>
+  
   </body>
 </html>

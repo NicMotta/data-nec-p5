@@ -157,7 +157,6 @@ function setStop() {
 
 function setDownload() {
   estadoMensaje = 'Descargado'
-  getAudioContext().resume()
   downloadSensors()
   downloadGeolocation()
   saveSound(soundFile, 'sonido' + fileDate + '.wav')

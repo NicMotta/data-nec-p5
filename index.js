@@ -37,6 +37,7 @@ let fileDate
 
 let estadoRegistro = false
 let estadoMensaje = 'No iniciado'
+let estadoAudio = 0;
 
 function setup() {
   noCanvas()
@@ -95,6 +96,16 @@ function draw() {
   ay.html(sensors[contadorSensor].ay)
   az.html(sensors[contadorSensor].az)
   datosSensor.html(contadorSensor)
+
+  if (mic.enabled && estadoAudio == 1) {
+    getAudioContext().resume()
+    recorder.record(soundFile)
+  }
+  else if (estadoAudio == 2) {
+    recorder.stop()
+    estadoAudio++
+  }
+
 }
 
 function positionChanged(position){
@@ -105,21 +116,6 @@ function positionChanged(position){
       lng: position.longitude,
     }
   }
-}
-
-function setRecord() {
-  if (mic.enabled && estadoRegistro) {
-    getAudioContext().resume()
-    recorder.record(soundFile)
-    console.log('grabando sonido')
-  }
-}
-
-function setStop() {
-  getAudioContext().resume()
-  recorder.stop()
-  console.log('deteniendo grabacion')
-  //saveSound(soundFile, 'mySound.wav')
 }
 
 function setSensores() {
@@ -150,19 +146,21 @@ function setTime() {
 function setStart() {
   estadoRegistro = true
   estadoMensaje = 'Iniciado'
+  estadoAudio = 1
 }
 
 function setStop() {
   estadoRegistro = false
   estadoMensaje = 'Detenido'
+  estadoAudio = 2
 }
 
 function setDownload() {
   estadoMensaje = 'Descargado'
   getAudioContext().resume()
-  downloadSensors()
-  downloadGeolocation()
-  saveSound(soundFile, 'sonido-' + fileDate + '.wav')
+  // downloadSensors()
+  // downloadGeolocation()
+  saveSound(soundFile, 'sonido' + fileDate + '.wav')
 }
 
 function setClear() {
@@ -171,6 +169,7 @@ function setClear() {
   timer.seconds = 0
   contadorGeolocation = 0
   contadorSensor = 0
+  estadoAudio = 0
 }
 
 function downloadSensors(){

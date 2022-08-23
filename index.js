@@ -25,13 +25,15 @@ let contadorSensor = 0
 let mic, recorder, soundFile
 let video;
 
-let estado;
+let estado
+let SensorsCSV, GeolocationCSV
 
 let timer = {
   minutes: 0,
   seconds: 0
 }
 let minutes, seconds
+let fileDate
 
 let estadoRegistro = false
 let estadoMensaje = 'No iniciado'
@@ -49,6 +51,11 @@ function setup() {
   recorder = new p5.SoundRecorder()
   recorder.setInput(mic)
   soundFile = new p5.SoundFile()
+
+  SensorsCSV = new p5.Table();
+  GeolocationCSV = new p5.Table();
+
+  fileDate = day() + '-' + month() + '-' + year()
 
   setInterval(setSensores, 200)
   setInterval(setTime, 1000)
@@ -92,7 +99,7 @@ function draw() {
 
 function positionChanged(position){
   if (estadoRegistro){
-    contadorGeolocation
+    contadorGeolocation++
     geolocation[contadorGeolocation] = {
       lat: position.latitude,
       lng: position.longitude,
@@ -153,7 +160,9 @@ function setStop() {
 function setDownload() {
   estadoMensaje = 'Descargado'
   getAudioContext().resume()
-  saveSound(soundFile, 'mySound.wav')
+  downloadSensors()
+  downloadGeolocation()
+  saveSound(soundFile, 'sonido-' + fileDate + '.wav')
 }
 
 function setClear() {
@@ -164,3 +173,38 @@ function setClear() {
   contadorSensor = 0
 }
 
+function downloadSensors(){
+
+  SensorsCSV.addColumn('gx')
+  SensorsCSV.addColumn('gy')
+  SensorsCSV.addColumn('gz')
+  SensorsCSV.addColumn('ax')
+  SensorsCSV.addColumn('ay')
+  SensorsCSV.addColumn('az')
+
+  sensors.map((element) => {
+    let newRow = SensorsCSV.addRow()
+    newRow.setNum('gx', element.gx)
+    newRow.setNum('gy', element.gy)
+    newRow.setNum('gz', element.gz)
+    newRow.setNum('ax', element.ax)
+    newRow.setNum('ay', element.ay)
+    newRow.setNum('az', element.az)
+  })
+
+  saveTable(SensorsCSV, 'sensors-' + fileDate + ".csv")
+}
+
+function downloadGeolocation(){
+
+  GeolocationCSV.addColumn('lat')
+  GeolocationCSV.addColumn('lng')
+
+  geolocation.map((element) => {
+    let newRow = GeolocationCSV.addRow()
+    newRow.setNum('lat', element.lat)
+    newRow.setNum('lng', element.lng)
+  })
+
+  saveTable(GeolocationCSV, 'geolocation-' + fileDate + ".csv")
+}

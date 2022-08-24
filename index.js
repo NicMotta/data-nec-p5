@@ -39,8 +39,25 @@ let estadoRegistro = false
 let estadoMensaje = 'No iniciado'
 let estadoAudio = 0;
 
+// -----------------
+let myMap
+let canvas
+let mappa = new Mappa('Leaflet')
+let data
+
+let options = {
+  lat: -34.439953,
+  lng: -58.559640,
+  zoom: 16,
+  style: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"
+}
+// -----------------
+
 function setup() {
   noCanvas()
+  // canvas = createCanvas(window.Width, 280)
+  // canvas.style('display', 'block');
+  // canvas.parent('#div')
 
   watchPosition(positionChanged)
 
@@ -74,6 +91,10 @@ function setup() {
   ay = select('#ay')
   az = select('#az')
   datosSensor = select('#datosensor')
+
+  // myMap = mappa.tileMap(options)
+  // myMap.overlay(canvas)
+  // myMap.onChange(callbackFunction)
 }
 
 function windowResized() {
@@ -172,7 +193,6 @@ function setClear() {
 }
 
 function downloadSensors(){
-
   SensorsCSV.addColumn('gx')
   SensorsCSV.addColumn('gy')
   SensorsCSV.addColumn('gz')
@@ -194,7 +214,6 @@ function downloadSensors(){
 }
 
 function downloadGeolocation(){
-
   GeolocationCSV.addColumn('lat')
   GeolocationCSV.addColumn('lng')
 
@@ -205,4 +224,19 @@ function downloadGeolocation(){
   })
 
   saveTable(GeolocationCSV, 'geolocation-' + fileDate + ".csv")
+}
+
+function callbackFunction(){
+  clear();
+  geolocation.map((dot) => {
+    const latitude = dot.lat
+    const longitude = dot.lng
+
+    if (myMap.map.getBounds().contains({lat: latitude, lng: longitude})) {
+      let pos = myMap.latLngToPixel(latitude, longitude);
+      fill(255,0,0);
+      noStroke();
+      ellipse(pos.x, pos.y, 10, 10);
+    }
+  })
 }

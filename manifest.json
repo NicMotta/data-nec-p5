@@ -1,0 +1,22 @@
+{
+	"name":"data_nec v2.0",
+	"short_name":"data_nec",
+	"start_url":"index.html",
+	"display":"standalone",
+	"background_color":"#fff",
+	"theme_color":"black",
+	"scope": ".",
+	"description":"data_nec v.2.0 - Nic Motta",
+	"icons":[
+	{
+	"src":"images/logo192.png",
+	"sizes":"192x192",
+	"type":"image/png"
+	},
+	{
+	"src":"images/logo512.png",
+	"sizes":"512x512",
+	"type":"image/png"
+	}
+]
+}

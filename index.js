@@ -26,7 +26,7 @@ let mic, recorder, soundFile
 let video;
 
 let estado
-let SensorsCSV, GeolocationCSV
+let sensorsCSV, geolocationCSV
 
 let timer = {
   minutes: 0,
@@ -34,6 +34,7 @@ let timer = {
 }
 let minutes, seconds
 let fileDate
+let dateStart, dateStop
 
 let estadoRegistro = false
 let estadoMensaje = 'No iniciado'
@@ -53,6 +54,8 @@ let options = {
 }
 // -----------------
 
+
+
 function setup() {
   noCanvas()
   // canvas = createCanvas(window.Width, 280)
@@ -64,18 +67,13 @@ function setup() {
   video = createCapture(VIDEO)
   video.size(1, 1)
 
-  mic = new p5.AudioIn()
-  mic.start()
-  recorder = new p5.SoundRecorder()
-  recorder.setInput(mic)
-  soundFile = new p5.SoundFile()
+  sensorsCSV = new p5.Table()
+  geolocationCSV = new p5.Table()
+  dateCSV = new p5.Table()
 
-  SensorsCSV = new p5.Table();
-  GeolocationCSV = new p5.Table();
+  fileDate = day() + '-' + month() + '-' + year() + '-' + hour() + '-' + minute()
 
-  fileDate = day() + '-' + month() + '-' + year()
-
-  setInterval(setSensores, 200)
+  setInterval(setSensores, 100)
   setInterval(setTime, 1000)
 
   estado = select('#status')
@@ -97,10 +95,6 @@ function setup() {
   // myMap.onChange(callbackFunction)
 }
 
-function windowResized() {
-  resizeCanvas(window.innerWidth, window.innerHeight)
-}
-
 function draw() {
   image(video, 0, 0);
 
@@ -117,15 +111,6 @@ function draw() {
   ay.html(sensors[contadorSensor].ay)
   az.html(sensors[contadorSensor].az)
   datosSensor.html(contadorSensor)
-
-  if (mic.enabled && estadoAudio == 1) {
-    getAudioContext().resume()
-    recorder.record(soundFile)
-  }
-  else if (estadoAudio == 2) {
-    recorder.stop()
-    estadoAudio++
-  }
 
 }
 
@@ -151,7 +136,6 @@ function setSensores() {
       az: accelerationZ.toFixed(1),
     }
   }
-  // setear html
 }
 
 function setTime() {
@@ -167,20 +151,20 @@ function setTime() {
 function setStart() {
   estadoRegistro = true
   estadoMensaje = 'Iniciado'
-  estadoAudio = 1
+  dateStart = day() + '-' + month() + '-' + year() + ' ' + hour() + ':' + minute()
 }
 
 function setStop() {
   estadoRegistro = false
   estadoMensaje = 'Detenido'
-  estadoAudio = 2
+  dateStop = day() + '-' + month() + '-' + year() + ' ' + hour() + ':' + minute()
 }
 
 function setDownload() {
   estadoMensaje = 'Descargado'
   downloadSensors()
   downloadGeolocation()
-  saveSound(soundFile, 'sonido' + fileDate + '.wav')
+  downloadDate()
 }
 
 function setClear() {
@@ -189,19 +173,18 @@ function setClear() {
   timer.seconds = 0
   contadorGeolocation = 0
   contadorSensor = 0
-  estadoAudio = 0
 }
 
 function downloadSensors(){
-  SensorsCSV.addColumn('gx')
-  SensorsCSV.addColumn('gy')
-  SensorsCSV.addColumn('gz')
-  SensorsCSV.addColumn('ax')
-  SensorsCSV.addColumn('ay')
-  SensorsCSV.addColumn('az')
+  sensorsCSV.addColumn('gx')
+  sensorsCSV.addColumn('gy')
+  sensorsCSV.addColumn('gz')
+  sensorsCSV.addColumn('ax')
+  sensorsCSV.addColumn('ay')
+  sensorsCSV.addColumn('az')
 
   sensors.map((element) => {
-    let newRow = SensorsCSV.addRow()
+    let newRow = sensorsCSV.addRow()
     newRow.setNum('gx', element.gx)
     newRow.setNum('gy', element.gy)
     newRow.setNum('gz', element.gz)
@@ -210,20 +193,48 @@ function downloadSensors(){
     newRow.setNum('az', element.az)
   })
 
-  saveTable(SensorsCSV, 'sensors-' + fileDate + ".csv")
+  saveTable(sensorsCSV, 'sensors-' + fileDate + ".csv")
 }
 
 function downloadGeolocation(){
-  GeolocationCSV.addColumn('lat')
-  GeolocationCSV.addColumn('lng')
+  geolocationCSV.addColumn('lat')
+  geolocationCSV.addColumn('lng')
 
   geolocation.map((element) => {
-    let newRow = GeolocationCSV.addRow()
+    let newRow = geolocationCSV.addRow()
     newRow.setNum('lat', element.lat)
     newRow.setNum('lng', element.lng)
   })
 
-  saveTable(GeolocationCSV, 'geolocation-' + fileDate + ".csv")
+  saveTable(geolocationCSV, 'geolocation-' + fileDate + ".csv")
+}
+
+function downloadDate() {
+  const duration = timer.minutes + ':' + timer.seconds
+
+  createStringDict({
+    dateStart: dateStart,
+    dateStop: dateStop,
+    totalDuration: duration,
+    totalSensors: contadorSensor,
+    totalGeolocation: contadorGeolocation,
+  }).saveTable('data-' + fileDate + '.csv');
+
+
+  // dateCSV.addColumn('dateStart')
+  // dateCSV.addColumn('dateStop')
+  // dateCSV.addColumn('totalDuration')
+  // dateCSV.addColumn('totalSensors')
+  // dateCSV.addColumn('totalGeolocation')
+
+  // let newRow = geolocationCSV.addRow()
+  // newRow.setNum('dateStart', dateStart)
+  // newRow.setNum('dateStop', dateStop)
+  // newRow.setNum('totalDuration', duration)
+  // newRow.setNum('totalSensors', contadorSensor)
+  // newRow.setNum('totalGeolocation', contadorGeolocation)
+
+  // saveTable(dateCSV, 'data-' + fileDate + '.csv')
 }
 
 function callbackFunction(){

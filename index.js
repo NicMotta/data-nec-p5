@@ -169,8 +169,26 @@ function setDownload() {
 
 function setClear() {
   estadoMensaje = 'Reset'
-  timer.minutes = 0
-  timer.seconds = 0
+
+  timer[{
+    minutes: 0,
+    seconds: 0,
+  }]
+
+  geolocation[{
+    lat: 0,
+    lng: 0
+  }]
+
+  sensors = [{
+    gx: 0,
+    gy: 0,
+    gz: 0,
+    ax: 0,
+    ay: 0,
+    az: 0
+  }]
+
   contadorGeolocation = 0
   contadorSensor = 0
 }
